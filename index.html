@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>POS_SYSTEM</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" rel="stylesheet">
+
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        #dashBordBody .card-body {
+            font-size: 24px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .card-number {
+            font-size: 48px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        #row {
+            position: relative;
+            left: 100px;
+            top: 20px;
+        }
+
+        #progress {
+            position: relative;
+            top: 65px;
+            left: 210px;
+        }
+
+        @media all and (min-width: 320px) and (max-width: 768px) {
+            #row {
+                left: 0px;
+            }
+
+            #progress > div > img {
+                width: 340px;
+            }
+
+            #progress {
+                top: 100px;
+                left: -35px;
+            }
+        }
+
+        #customerBody {
+            display: none;
+        }
+
+        #itemBody {
+            display: none;
+        }
+
+        #orderBody {
+            display: none;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+
+        .cus {
+            font-family: 'Oswald', sans-serif;
+        }
+
+
+        @media all and (min-width: 320px) and (max-width: 768px) {
+            .tblDiv {
+                position: relative;
+                left: -49px;
+                top: 50px;
+            }
+        }
+
+        .product {
+            position: relative;
+            left: 14px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .card-img {
+            width: 50px;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+        .tblProduct {
+            position: relative;
+            left: 50px;
+            top: 10px;
+        }
+
+
+        @media all and (min-width: 320px) and (max-width: 768px) {
+            .tblProduct {
+                top: 25px;
+                left: -7px;
+            }
+        }
+
+        .tblOrder {
+            position: relative;
+            width: 500px;
+            height: 400px;
+            left: 150px;
+            display: grid;
+            grid-template-rows: repeat(5, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .tblOrder > div > img {
+            width: 87px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .tblOrder > div > img:hover {
+            width: 100px;
+        }
+
+        .order {
+            position: relative;
+            left: 13px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+
+        @media all and (min-width: 320px) and (max-width: 768px) {
+            .tblOrder {
+                position: relative;
+                left: 0px;
+            }
+
+            .orderAMu {
+                position: relative;
+                top: 50px;
+            }
+        }
+
+
+    </style>
+
+
+</head>
+<body class="bg-secondary" onload="getAllCustomers();getAllItems();getAllCustomersForDropDown();getAllItemsForDropDown();getAllOrderDetail()" >
+<nav class="navbar navbar-expand-lg navbar-dark bg-secondary mb-3">
+    <a class="navbar-brand" href="#">POS System</a>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active" id="dt">
+                <a class="nav-link" id="dashbordbtn">Dashboard</a>
+            </li>
+            <li class="nav-item" id="ct">
+                <a class="nav-link" id="customerbtn" >Customers</a>
+            </li>
+            <li class="nav-item" id="it">
+                <a class="nav-link" id="itembtn">Items</a>
+            </li>
+            <li class="nav-item" id="ot">
+                <a class="nav-link" id="orderbtn">Orders</a>
+            </li>
+        </ul>
+        <form class="form-inline">
+            <input aria-label="Search" class="form-control mr-sm-2" placeholder="Search" type="search">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+<div class="container-fluid  bg-light" id="dashBordBody">
+    <div class="jumbotron">
+        <div class="row" id="row">
+            <div class="col-lg-3 col-sm-12 col-md-12">
+                <div class="card bg-primary text-dark">
+                    <div class="card-body">Customer<i class="fa fa-group ml-5" style="font-size:36px"></i></div>
+                    <div class="col-lg-12" style="text-align: center">
+                        <h1 class="card-number">00</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-12">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body">Orders<i class="fa fa-shopping-cart ml-5" style="font-size:36px"></i></div>
+                    <div class="col-lg-12" style="text-align: center">
+                        <h1 class="card-number">00</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-12">
+                <div class="card bg-danger text-dark">
+                    <div class="card-body">Product<i class="fa fa-shopping-bag ml-5" style="font-size:36px;"></i></div>
+                    <div class="col-lg-12" style="text-align: center">
+                        <h1 class="card-number">00</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="progress">
+            <div class="col-lg-12 col-sm-12 col-md-12">
+                <img src="POSassets/Image/Excel-charts-11.png">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--CustomerBody-->
+
+<div class="container-fluid bg-light" id="customerBody" >
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="cus" style="text-align: center">Customer</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="from col-lg-5 col-sm-12 col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background: #007bff"></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Customer ID</label>
+                                    <input aria-describedby="emailHelp" class="form-control" id="CustomerID"
+                                           placeholder="Enter ID" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Customer Name</label>
+                                    <input class="form-control" id="CustomerName" placeholder="Enter Name" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Customer Address</label>
+                                    <input class="form-control" id="CustomerAddress" placeholder="Enter Address" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Customer Salary</label>
+                                    <input class="form-control" id="customerSalary" placeholder="Enter Salary" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-outline-primary" onclick="saveCustomer()" id="customerbtn1" type="button">Submit</button>
+                        <button class="btn btn-outline-danger" onclick="deleteCustomer()" type="button">Delete</button>
+                        <button class="btn btn-outline-warning" onclick="updateCustomer()" id="customerbtn2" type="button">Update</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="tblDiv col-lg-6  ml-5 col-sm-12 col-md-12 ">
+                <div class="card">
+                    <div class="card-header" style="background: #007bff"></div>
+                    <div class="card-body">
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+                            <table class="table table-bordered table-striped mb-0" id="cusTable">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Contact</th>
+                                </tr>
+                                </thead>
+                                <tbody id="cusTbBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--itemContent-->
+
+<div class="container-fluid bg-light" id="itemBody">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="product col-lg-12">
+                <h1 style="text-align: center">Product</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5 col-sm-12 col-md-12 mt-2">
+                <div class="card">
+                    <div class="card-header" style="background: #007bff"></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Product ID</label>
+                                    <input class="form-control" id="ItemID" placeholder="Enter ID" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Product Name</label>
+                                    <input class="form-control" id="ItemName" placeholder="Enter Name" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Product Quantity</label>
+                                    <input class="form-control" id="ItemQTY" placeholder="Enter QTY" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label>Product Price</label>
+                                    <input class="form-control" id="ItemPrice" placeholder="Enter Price" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary" id="itembtn1" onclick="saveItem()" type="button">Submit</button>
+                        <button class="btn btn-outline-danger" type="button" onclick="deleteItem()">Delete</button>
+                        <button class="btn btn-outline-success" id="itembtn2" type="button" onclick="updateItem()">Update</button>
+                        <button class="btn btn-outline-warning" type="button">Cancel</button>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="tblProduct col-lg-6 col-sm-12 col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background: #007bff"></div>
+                    <div class="card-body">
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar col-lg-12 col-sm-12 col-md-12">
+                            <table class="table table-striped" id="tblItem">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Unit Price</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tblItembody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Order body-->
+<div class="container-fluid bg-light" id="orderBody">
+    <div class="container-fluid mt-4">
+        <div class="jumbotron pt-4">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header" style="background: #007bff;color: white;font-weight: bold">Order
+                            Detail
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="OrderID">OrderID</label>
+                                            <input class="form-control" id="OrderID" placeholder="OrderID" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="Date">Date</label>
+                                            <input class="form-control" id="Date" placeholder="Date" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="CusID">Customer ID</label>
+                                            <select class="form-control" id="CusID">
+                                                <option>Customer ID</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="Date">Customer Name</label>
+                                            <input class="form-control" id="CusName" placeholder="CusName" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="Date">Customer Address</label>
+                                            <input class="form-control" id="CusAddress" placeholder="CusAddress"
+                                                   type="text">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="Date">Customer Contact</label>
+                                            <input class="form-control" id="CusContact" placeholder="CusContact"
+                                                   type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header" style="background: #007bff;color: white;font-weight: bold">Item
+                            Detail
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="ItemID">Item Code</label>
+                                        <select class="form-control" id="OrderItemID">
+                                            <option>Item</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Item Name</label>
+                                        <input class="form-control" id="OrderItemName" placeholder="ItemName"
+                                               type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Unit Price</label>
+                                        <input class="form-control" id="OrderItemUnitPrice" placeholder="UnitPrice"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Quantity on hand</label>
+                                        <input class="form-control" id="OrderQTYOnHand" placeholder="QTYOnHand"
+                                               type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Quantity</label>
+                                        <input class="form-control" id="OrderQTY" placeholder="QTY" type="number">
+                                    </div>
+                                </div>
+                                <div class="form-group mt-4 ml-3">
+                                    <button class="btn btn-primary col-12" id="addItem" type="button" onclick="placeOrder();getAllOrderDetail()">AddItem</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header" style="background: #007bff"></div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Total</label>
+                                        <input class="form-control" id="total" placeholder="00.00" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Sub Total</label>
+                                        <input class="form-control" id="subTotal" placeholder="00.00" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Cash</label>
+                                        <input class="form-control" id="cash" placeholder="QTYOnHand" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Discount</label>
+                                        <input class="form-control" id="discount" placeholder="QTY" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="Date">Balance</label>
+                                        <input class="form-control" id="balance" placeholder="QTY" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group  mt-4 ml-3">
+                                    <button class="btn btn-primary col-12" type="button">Payment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">order ID</th>
+                        <th scope="col">cus ID</th>
+                        <th scope="col">item code</th>
+                        <th scope="col">QTY</th>
+
+                    </tr>
+                    </thead>
+                    <tbody id="tblOrderItemBody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $('#dashbordbtn').on("click", function () {
+        $('#customerBody').css("display", 'none');
+        $('#itemBody').css("display", 'none');
+        $('#orderBody').css("display", 'none');
+        $('#dashBordBody').css("display", 'block');
+    });
+    $('#customerbtn').on("click", function () {
+        $('#customerBody').css("display", 'block');
+        $('#dashBordBody').css("display", 'none');
+        $('#itemBody').css("display", 'none');
+        $('#orderBody').css("display", 'none');
+    });
+    $('#itembtn').on("click", function () {
+        $('#customerBody').css("display", 'none');
+        $('#dashBordBody').css("display", 'none');
+        $('#itemBody').css("display", 'block');
+        $('#orderBody').css("display", 'none');
+    });
+    $('#orderbtn').on("click", function () {
+        $('#customerBody').css("display", 'none');
+        $('#dashBordBody').css("display", 'none');
+        $('#itemBody').css("display", 'none');
+        $('#orderBody').css("display", 'block');
+    });
+
+</script>
+<script src="src/controller/customerController.js"></script>
+<script src="src/controller/itemController.js"></script>
+<script src="src/controller/orderController.js"></script>
+<script>
+
+</script>
+</body>
+</html>
